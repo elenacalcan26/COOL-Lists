@@ -15,8 +15,13 @@ class Product {
 
     getprice():Int{ price * 119 / 100 };
 
-    toString():String {
-        "TODO: implement me"
+    toString() : String {
+        type_name()
+        .concat("(")
+        .concat(name)
+        .concat(";")
+        .concat(model)
+        .concat(")")
     };
 };
 
@@ -52,9 +57,12 @@ class Rank {
         name <- n
     };
 
-    toString():String {
+    toString() : String {
         -- Hint: what are the default methods of Object?
-        "TODO: implement me"
+        type_name()
+        .concat("(")
+        .concat(name)
+        .concat(")")
     };
 };
 
