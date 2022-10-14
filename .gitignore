@@ -1,1 +1,4 @@
 checker/
+.code
+.log
+.combined.cl
