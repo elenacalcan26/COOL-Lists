@@ -6,14 +6,14 @@ class Product {
     model : String;
     price : Int;
 
-    init(n : String, m: String, p : Int):SELF_TYPE {{
+    init(n : String, m: String, p : Int) : SELF_TYPE {{
         name <- n;
         model <- m;
         price <- p;
         self;
     }};
 
-    getprice():Int{ price * 119 / 100 };
+    getprice() : Int{ price * 119 / 100 };
 
     toString() : String {
         type_name()
@@ -58,7 +58,6 @@ class Rank {
     };
 
     toString() : String {
-        -- Hint: what are the default methods of Object?
         type_name()
         .concat("(")
         .concat(name)
