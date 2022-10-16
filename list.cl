@@ -13,17 +13,13 @@ class List {
 
     append(l : List) : List { l };
 
-    toString(): String {
-        "[ ]\n"
-    };
+    toString(): String { "" };
 
     toStringInner() : String { "" };
 
     merge(other : List) : List { self };
 
-    filterBy() : SELF_TYPE {
-        self (* TODO *)
-    };
+    filterBy(f : Filter) : List { self };
 
     sortBy() : SELF_TYPE {
         self (* TODO *)
@@ -34,6 +30,8 @@ class List {
     getNthList(n : Int) : List { self };
 
     removeFromIndex(n : Int) : List { self };
+
+    replaceListAtIndex(n : Int, l : List) : List { self };
 
     print() : IO { new IO.out_string("\n") };
 };
@@ -68,16 +66,16 @@ class Cons inherits List {
     };
 
     toString() : String {
-        let str : String <- "[ ",
+        let str : String <- "",
             copy : List <- self,
             idx : Int <- 1,
             atoiHelper : A2I <- new A2I in
         {
-            str <- atoiHelper.i2a(idx).concat(": ").concat(str);
+            str <- atoiHelper.i2a(idx).concat(": [ ").concat(str);
             while not copy.isEmpty() loop
             {
                 case copy.head() of
-                    l : List => str <- str.concat(l.toStringInner());
+                    l : List => str <- str.concat(l.toStringInner()).concat(" ]\n");
                     o : Object => str <- str.concat(castHeadToString());
                 esac;
 
@@ -85,7 +83,7 @@ class Cons inherits List {
                 idx <- idx + 1;
 
                 if not copy.isEmpty() then
-                    str <- str.concat(atoiHelper.i2a(idx)).concat(": [ ")
+                    str <- str.concat(atoiHelper.i2a(idx).concat(": [ "))
                 else
                     str <- str.concat("")
                 fi;
@@ -97,10 +95,9 @@ class Cons inherits List {
 
     toStringInner() : String {
         if isEmpty() then
-            " ]\n"
+            ""
         else if tl.isEmpty() then
             castHeadToString()
-            .concat(" ]\n")
         else
             castHeadToString().concat(", ").concat(tl.toStringInner())
         fi fi
@@ -140,6 +137,21 @@ class Cons inherits List {
         }
     };
 
+    replaceListAtIndex(n : Int, l : List) : List {
+        let copy : List <- self,
+            iter : Int <- 1,
+            aux : List <- new List in
+        {
+            while not copy.isEmpty() loop
+            {
+                aux <- if iter = n then aux.cons(l) else aux.cons(copy.head()) fi;
+                iter <- iter + 1;
+                copy <- copy.tail();
+            } pool;
+            aux;
+        }
+    };
+
     merge(other : List) : List {
         let copy : List <- self,
             aux : List <- other in
@@ -154,8 +166,17 @@ class Cons inherits List {
         }
     };
 
-    filterBy() : SELF_TYPE {
-        self (* TODO *)
+    filterBy(f : Filter) : List {
+        let aux : List <- self,
+            filteredList : List <- new List in
+        {
+            while not aux.isEmpty() loop
+            {
+                filteredList <- if f.filter(aux.head()) then filteredList.add(aux.head()) else filteredList fi;
+                aux <- aux.tail();
+            } pool;
+            filteredList;
+        }
     };
 
     sortBy() : SELF_TYPE {

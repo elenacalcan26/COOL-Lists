@@ -46,7 +46,7 @@ class Main inherits IO {
                             {
                                 let wantedList : List <- lists.getNthList(atoiHelper.a2i(tokenizer.nextToken())) in
                                 {
-                                    out_string("[ ".concat(wantedList.toStringInner()));
+                                    out_string("[ ".concat(wantedList.toStringInner()).concat(" ]\n"));
                                 };
                             }
                         fi
@@ -68,8 +68,27 @@ class Main inherits IO {
                                     lists <- lists.add(merged);
                                 };
                         }
+                    else if cmd = "filterBy" then
+                        {
+                            let idx : Int <- atoiHelper.a2i(tokenizer.nextToken()),
+                                filter : String <- tokenizer.nextToken(),
+                                filteredList : List <- lists.getNthList(idx) in
+                                {
+                                    if filter = "ProductFilter" then
+                                        filteredList <- filteredList.filterBy(new ProductFiler)
+                                    else if filter = "RankFilter" then
+                                        filteredList <- filteredList.filterBy(new RankFilter)
+                                    else if filter = "SamePriceFilter" then
+                                        filteredList <- filteredList.filterBy(new SamePriceFilter)
+                                    else
+                                        lists
+                                    fi fi fi;
+
+                                    lists <- lists.replaceListAtIndex(idx, filteredList);
+                                };
+                        }
                     else abort()
-                    fi fi fi;
+                    fi fi fi fi;
                 somestr <- in_string();
                 tokenizer <- new StringTokenizer.init(somestr, somestr.length());
                 cmd <- tokenizer.nextToken();
