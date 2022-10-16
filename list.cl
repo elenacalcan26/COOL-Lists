@@ -71,8 +71,14 @@ class Cons inherits List {
         {
             while not copy.isEmpty() loop
             {
-                str <- str.concat(copy.toStringInner());
+                case copy.head() of
+                    l : List => str <- str.concat(l.toStringInner());
+                    o : Object => str <- str.concat(castHeadToString());
+                esac;
+
                 copy <- copy.tail();
+
+                if not copy.isEmpty() then str <- str.concat("[ ") else str <- str.concat("") fi;
 
             } pool;
             str;
@@ -80,13 +86,14 @@ class Cons inherits List {
     };
 
     toStringInner() : String {
+
         if isEmpty() then
             " ]\n"
         else if tl.isEmpty() then
             castHeadToString()
             .concat(" ]\n")
         else
-           castHeadToString().concat(", ").concat(tl.toStringInner())
+            castHeadToString().concat(", ").concat(tl.toStringInner())
         fi fi
     };
 

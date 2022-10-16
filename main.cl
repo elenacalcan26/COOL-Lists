@@ -34,7 +34,7 @@ class Main inherits IO {
 
                             } pool;
 
-                            lists <- lists.append(loadedObjects);
+                            lists <- lists.add(loadedObjects);
 
                         };
                     } else if cmd = "print" then
