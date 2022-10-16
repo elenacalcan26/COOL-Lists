@@ -31,7 +31,7 @@ class List {
         self (* TODO *)
     };
 
-    getNthElem(n : Int) : String { "" };
+    getInnerNthElem(n : Int) : String { "" };
 
     print() : IO { new IO.out_string("\n") };
 };
@@ -102,13 +102,13 @@ class Cons inherits List {
         self (* TODO *)
     };
 
-    getNthElem(n : Int) : String {
+    getInnerNthElem(n : Int) : String {
         if n = 0 then
             castHeadToString()
         else
             {
                 n <- n - 1;
-                tl.getNthElem(n);
+                tl.getInnerNthElem(n);
             }
         fi
     };
@@ -122,6 +122,10 @@ class Cons inherits List {
                 product : Product => product.toString();
                 rank : Rank => rank.toString();
                 string : String => string;
+                sw : StringWrapper => sw.toString();
+                iw : IntWrapper => iw.toString();
+                bw : BoolWrapper => bw.toString();
+                iow : IOWrapper => iow.toString();
                 oHead: Object => "Object()";
             esac
         in

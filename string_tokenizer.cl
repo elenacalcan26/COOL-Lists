@@ -69,7 +69,7 @@ class StringTokenizer {
             let str : String in
             {
                 -- get the token from the token list based on tokenPos
-                str <- tokens.getNthElem(tokenPos);
+                str <- tokens.getInnerNthElem(tokenPos);
                 tokenPos <- tokenPos + 1;
                 str;
             };
