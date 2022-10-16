@@ -33,6 +33,8 @@ class List {
 
     getInnerNthElem(n : Int) : String { "" };
 
+    getNthList(n : Int) : Object { head() };
+
     print() : IO { new IO.out_string("\n") };
 };
 
@@ -67,8 +69,11 @@ class Cons inherits List {
 
     toString() : String {
         let str : String <- "[ ",
-            copy : List <- self in
+            copy : List <- self,
+            idx : Int <- 1,
+            atoiHelper : A2I <- new A2I in
         {
+            str <- atoiHelper.i2a(idx).concat(": ").concat(str);
             while not copy.isEmpty() loop
             {
                 case copy.head() of
@@ -77,8 +82,13 @@ class Cons inherits List {
                 esac;
 
                 copy <- copy.tail();
+                idx <- idx + 1;
 
-                if not copy.isEmpty() then str <- str.concat("[ ") else str <- str.concat("") fi;
+                if not copy.isEmpty() then
+                    str <- str.concat(atoiHelper.i2a(idx)).concat(": [ ")
+                else
+                    str <- str.concat("")
+                fi;
 
             } pool;
             str;
@@ -86,7 +96,6 @@ class Cons inherits List {
     };
 
     toStringInner() : String {
-
         if isEmpty() then
             " ]\n"
         else if tl.isEmpty() then
@@ -95,6 +104,19 @@ class Cons inherits List {
         else
             castHeadToString().concat(", ").concat(tl.toStringInner())
         fi fi
+    };
+
+    getNthList(idx : Int) : Object {
+        let iter : Int <- 1,
+            copy : List <- self in
+        {
+            while iter < idx loop
+            {
+                iter <- iter + 1;
+                copy <- copy.tail();
+            } pool;
+            copy.head();
+        }
     };
 
     merge(other : List) : SELF_TYPE {

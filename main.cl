@@ -3,6 +3,7 @@ class Main inherits IO {
     looping : Bool <- true;
     somestr : String;
     tokenizer : StringTokenizer;
+    atoiHelper : A2I <- new A2I;
 
     main() : Object {
 
@@ -38,7 +39,22 @@ class Main inherits IO {
 
                         };
                     } else if cmd = "print" then
-                        out_string(lists.toString())
+                        if 1 = tokenizer.getTokensLen() then
+                            -- print all lists
+                            out_string(lists.toString())
+                        else
+                            {
+                                let wantedList : Object <- lists.getNthList(atoiHelper.a2i(tokenizer.nextToken())) in
+                                {
+                                    case wantedList of
+                                        l : Cons => out_string("[ ".concat(l.toStringInner()));
+                                        o : Object => out_string("wut");
+                                    esac;
+                                };
+                            }
+                        fi
+
+
                     else abort()
                     fi fi;
                 somestr <- in_string();
