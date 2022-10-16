@@ -53,8 +53,11 @@ class Router inherits Product {};
 class Rank {
     name : String;
 
-    init(n : String):String {
-        name <- n
+    init(n : String) : SELF_TYPE {
+       {
+        name <- n;
+        self;
+       }
     };
 
     toString() : String {
