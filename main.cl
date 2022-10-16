@@ -44,19 +44,32 @@ class Main inherits IO {
                             out_string(lists.toString())
                         else
                             {
-                                let wantedList : Object <- lists.getNthList(atoiHelper.a2i(tokenizer.nextToken())) in
+                                let wantedList : List <- lists.getNthList(atoiHelper.a2i(tokenizer.nextToken())) in
                                 {
-                                    case wantedList of
-                                        l : Cons => out_string("[ ".concat(l.toStringInner()));
-                                        o : Object => out_string("wut");
-                                    esac;
+                                    out_string("[ ".concat(wantedList.toStringInner()));
                                 };
                             }
                         fi
 
+                    else if cmd = "merge" then
+                        {
+                            let idx1 : Int <- atoiHelper.a2i(tokenizer.nextToken()),
+                                idx2 : Int <- atoiHelper.a2i(tokenizer.nextToken()),
+                                list1 : List <- lists.getNthList(idx1),
+                                list2 : List <- lists.getNthList(idx2),
+                                merged : List in
+                                {
+                                    merged <- list1.merge(list2);
 
+                                    lists <- lists.removeFromIndex(idx1);
+                                    idx2 <- idx2 - 1;
+                                    lists <- lists.removeFromIndex(idx2);
+
+                                    lists <- lists.add(merged);
+                                };
+                        }
                     else abort()
-                    fi fi;
+                    fi fi fi;
                 somestr <- in_string();
                 tokenizer <- new StringTokenizer.init(somestr, somestr.length());
                 cmd <- tokenizer.nextToken();

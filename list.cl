@@ -19,9 +19,7 @@ class List {
 
     toStringInner() : String { "" };
 
-    merge(other : List) : SELF_TYPE {
-        self (* TODO *)
-    };
+    merge(other : List) : List { self };
 
     filterBy() : SELF_TYPE {
         self (* TODO *)
@@ -33,7 +31,9 @@ class List {
 
     getInnerNthElem(n : Int) : String { "" };
 
-    getNthList(n : Int) : Object { head() };
+    getNthList(n : Int) : List { self };
+
+    removeFromIndex(n : Int) : List { self };
 
     print() : IO { new IO.out_string("\n") };
 };
@@ -106,7 +106,7 @@ class Cons inherits List {
         fi fi
     };
 
-    getNthList(idx : Int) : Object {
+    getNthList(idx : Int) : List {
         let iter : Int <- 1,
             copy : List <- self in
         {
@@ -115,12 +115,43 @@ class Cons inherits List {
                 iter <- iter + 1;
                 copy <- copy.tail();
             } pool;
-            copy.head();
+
+            -- cast to List type
+            case copy.head() of
+                l : List => l;
+            esac;
         }
     };
 
-    merge(other : List) : SELF_TYPE {
-        self (* TODO *)
+    removeFromIndex(n : Int) : List {
+        let copy : List <- self,
+            iter : Int <- 1,
+            aux : List <- new List in
+        {
+            while iter < n loop
+            {
+                iter <- iter + 1;
+                aux <- aux.add(copy.head());
+                copy <- copy.tail();
+            } pool;
+
+            aux <- aux.append(copy.tail());
+            aux;
+        }
+    };
+
+    merge(other : List) : List {
+        let copy : List <- self,
+            aux : List <- other in
+        {
+            while not aux.isEmpty() loop
+            {
+                copy <- copy.add(aux.head());
+                aux <- aux.tail();
+
+            } pool;
+            copy;
+        }
     };
 
     filterBy() : SELF_TYPE {
