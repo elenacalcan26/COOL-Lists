@@ -21,9 +21,11 @@ class List {
 
     filterBy(f : Filter) : List { self };
 
-    sortBy() : SELF_TYPE {
-        self (* TODO *)
-    };
+    (*
+        -- comparator -> the used comparator for sorting
+        -- order -> the manner in which the list is sorted; true - ascending, false - descending
+    *)
+    sortBy(comparator : Comparator, order : Bool) : List { self };
 
     getInnerNthElem(n : Int) : String { "" };
 
@@ -32,6 +34,10 @@ class List {
     removeFromIndex(n : Int) : List { self };
 
     replaceListAtIndex(n : Int, l : List) : List { self };
+
+    getMinMaxInnerElem(o : Object, cmp : Comparator, order : Bool) : Object { head() };
+
+    removeGivenElem(o : Object) : List { self };
 
     print() : IO { new IO.out_string("\n") };
 };
@@ -179,8 +185,64 @@ class Cons inherits List {
         }
     };
 
-    sortBy() : SELF_TYPE {
-        self (* TODO *)
+    getMinMaxInnerElem(elem : Object, cmp : Comparator, order : Bool) : Object {
+        let copy : List <- self in
+        {
+            if copy.isEmpty()
+            then
+                elem
+            else {
+                while not copy.isEmpty() loop
+                {
+                    -- check if elements respects the order
+                    if cmp.compareTo(elem, copy.head()) = order
+                    then
+                        copy <- copy.tail()
+                    else
+                    {
+                        -- new IO.out_string(copy.toStringInner());
+                        elem <- copy.head();
+                        copy <- copy.tail();
+                    }
+                    fi;
+                } pool;
+               elem;
+            } fi;
+            elem;
+        }
+    };
+
+    removeGivenElem(elem : Object) : List {
+        let copy : List <- self,
+            acc : List <- new List in
+        {
+            while not copy.isEmpty() loop
+            {
+                if not copy.head() = elem
+                then
+                    acc <- acc.add(copy.head())
+                else
+                    0 -- dummy
+                fi;
+                copy <- copy.tail();
+            } pool;
+            acc;
+        }
+    };
+
+    sortBy(comparator : Comparator, order : Bool) : List {
+        let copy : List <- self,
+            acc : List <- new List,
+            elem : Object in
+        {
+            while not copy.isEmpty() loop
+            {
+                elem <- copy.getMinMaxInnerElem(copy.head(), comparator, order);
+                acc <- acc.add(elem);
+                copy <- copy.removeGivenElem(elem);
+            } pool;
+            acc;
+        }
     };
 
     getInnerNthElem(n : Int) : String {
