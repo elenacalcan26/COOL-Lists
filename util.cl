@@ -20,6 +20,25 @@ class PriceComparator inherits Comparator {
     };
 };
 
+class RankComparator inherits Comparator {
+    compareTo(o1 : Object, o2 : Object) : Bool {
+        let r1 : Int <- getRank(o1),
+            r2 : Int <- getRank(o2) in
+        {
+            if r1 < r2 then true else false fi;
+        }
+    };
+
+    getRank(obj : Object) : Int {
+        case obj of
+            p : Private => 1;
+            c : Corporal => 2;
+            s : Sergent => 3;
+            o : Officer => 4;
+        esac
+    };
+};
+
 class Filter {
     filter(o : Object):Bool {true};
 };

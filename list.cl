@@ -200,7 +200,6 @@ class Cons inherits List {
                         copy <- copy.tail()
                     else
                     {
-                        -- new IO.out_string(copy.toStringInner());
                         elem <- copy.head();
                         copy <- copy.tail();
                     }
