@@ -118,9 +118,11 @@ class Main inherits IO {
                 listToBeSorted <- listToBeSorted.sortBy(new PriceComparator, order)
             else if comparator = "RankComparator" then
                 listToBeSorted <- listToBeSorted.sortBy(new RankComparator, order)
+            else if comparator = "AlphabeticComparator" then
+                listToBeSorted <- listToBeSorted.sortBy(new AlphabeticComparator, order)
             else
                 listToBeSorted
-            fi fi;
+            fi fi fi;
 
             lists <- lists.replaceListAtIndex(idx, listToBeSorted);
         }

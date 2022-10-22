@@ -12,10 +12,10 @@ class PriceComparator inherits Comparator {
         }
     };
 
-    getPrice(o : Object) : Int {
-        case o of
+    getPrice(obj : Object) : Int {
+        case obj of
             p : Product => p.getprice();
-            obj : Object => { abort(); 0; };
+            o : Object => { abort(); 0; };
         esac
     };
 };
@@ -35,6 +35,24 @@ class RankComparator inherits Comparator {
             c : Corporal => 2;
             s : Sergent => 3;
             o : Officer => 4;
+            object : Object => { abort(); 0; };
+        esac
+    };
+};
+
+class AlphabeticComparator inherits Comparator{
+    compareTo(o1 : Object, o2 : Object) : Bool {
+        let s1 : String <- getString(o1),
+            s2 : String <- getString(o2) in
+        {
+            if s1 < s2 then true else false fi;
+        }
+    };
+
+    getString(obj : Object) : String {
+        case obj of
+            sw : StringWrapper => sw.getvalue();
+            o : Object => { abort(); ""; };
         esac
     };
 };

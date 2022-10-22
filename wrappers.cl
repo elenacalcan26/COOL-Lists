@@ -13,6 +13,8 @@ class Wrapper {
         }
     };
 
+    getvalue() : String { value };
+
     toString() : String { value };
 };
 
