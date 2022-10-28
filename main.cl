@@ -64,6 +64,7 @@ class Main inherits IO {
             -- print all lists
             out_string(lists.toString())
         else
+            -- get nth list & print it
             let wantedList : List <- lists.getNthList(atoiHelper.a2i(tokenizer.nextToken())) in
             {
                 out_string("[ ".concat(wantedList.toStringInner()).concat(" ]\n"));

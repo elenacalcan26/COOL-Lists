@@ -15,6 +15,7 @@ class List {
 
     toString(): String { "" };
 
+    -- returns elements of a inner list as string
     toStringInner() : String { "" };
 
     merge(other : List) : List { self };
@@ -29,14 +30,19 @@ class List {
 
     getInnerNthElem(n : Int) : String { "" };
 
+    -- returns the nth list form the list of lists
     getNthList(n : Int) : List { self };
 
+    -- used to remove the nth element from the given index
     removeFromIndex(n : Int) : List { self };
 
+    -- used to replace the nth list from the list of lists with a given one as a parameter
     replaceListAtIndex(n : Int, l : List) : List { self };
 
+    --  returns the minimum or maximum element of the list based on the sorting order
     getMinMaxInnerElem(o : Object, cmp : Comparator, order : Bool) : Object { head() };
 
+    -- deletes the given element from list
     removeGivenElem(o : Object) : List { self };
 
     print() : IO { new IO.out_string("\n") };
@@ -113,6 +119,7 @@ class Cons inherits List {
         let iter : Int <- 1,
             copy : List <- self in
         {
+            -- loop the list of lists until we find the nth one
             while iter < idx loop
             {
                 iter <- iter + 1;
@@ -129,15 +136,17 @@ class Cons inherits List {
     removeFromIndex(n : Int) : List {
         let copy : List <- self,
             iter : Int <- 1,
-            aux : List <- new List in
+            aux : List <- new List in -- accumulator role, retains the resulting list
         {
+            -- iterate the first n - 1 elements
             while iter < n loop
             {
                 iter <- iter + 1;
-                aux <- aux.add(copy.head());
+                aux <- aux.add(copy.head()); -- add element
                 copy <- copy.tail();
             } pool;
 
+            -- append whith the nth element tail
             aux <- aux.append(copy.tail());
             aux;
         }
@@ -146,10 +155,11 @@ class Cons inherits List {
     replaceListAtIndex(n : Int, l : List) : List {
         let copy : List <- self,
             iter : Int <- 1,
-            aux : List <- new List in
+            aux : List <- new List in -- accumulator role, retains the resulting list
         {
             while not copy.isEmpty() loop
             {
+                -- add elements (this time lists); on the nth index, will append the new list
                 aux <- if iter = n then aux.cons(l) else aux.cons(copy.head()) fi;
                 iter <- iter + 1;
                 copy <- copy.tail();
@@ -162,6 +172,7 @@ class Cons inherits List {
         let copy : List <- self,
             aux : List <- other in
         {
+            -- add elements from the given list to the current instance, one by one
             while not aux.isEmpty() loop
             {
                 copy <- copy.add(aux.head());
@@ -178,6 +189,7 @@ class Cons inherits List {
         {
             while not aux.isEmpty() loop
             {
+                -- add an element in the list if it passes the filter condition
                 filteredList <- if f.filter(aux.head()) then filteredList.add(aux.head()) else filteredList fi;
                 aux <- aux.tail();
             } pool;
@@ -213,8 +225,9 @@ class Cons inherits List {
 
     removeGivenElem(elem : Object) : List {
         let copy : List <- self,
-            acc : List <- new List in
+            acc : List <- new List in -- stores the elements that are different than the removed one
         {
+            -- loop list
             while not copy.isEmpty() loop
             {
                 if not copy.head() = elem
@@ -229,15 +242,19 @@ class Cons inherits List {
         }
     };
 
+    -- basically, it is created a new list by adding elements one by one according to the sorting order
     sortBy(comparator : Comparator, order : Bool) : List {
         let copy : List <- self,
-            acc : List <- new List,
+            acc : List <- new List, -- accumulator role, stores the sorted list
             elem : Object in
         {
             while not copy.isEmpty() loop
             {
+                -- get the minimum/maximum element
                 elem <- copy.getMinMaxInnerElem(copy.head(), comparator, order);
+                -- add it to the new list
                 acc <- acc.add(elem);
+                -- remove the found element from the current instance
                 copy <- copy.removeGivenElem(elem);
             } pool;
             acc;
@@ -246,18 +263,19 @@ class Cons inherits List {
 
     getInnerNthElem(n : Int) : String {
         if n = 0 then
+            -- found element
             castHeadToString()
         else
             {
+                -- move to tail element and will check if its head is the wanted element
                 n <- n - 1;
                 tl.getInnerNthElem(n);
             }
         fi
     };
 
-    (*
-        Downcast the head element of the list
-    *)
+
+    -- Downcast the head element of the list and returns its string format
     castHeadToString() : String  {
         let str : String <-
             case self.head() of
